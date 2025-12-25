@@ -1,97 +1,199 @@
-import { Facebook, Github, Instagram, Linkedin, Mail, MessageCircle } from 'lucide-react';
+import {
+  Check,
+  ChevronUp,
+  Copy,
+  Facebook,
+  Linkedin,
+  Mail,
+  MessageCircle,
+} from "lucide-react";
+import { useEffect, useState } from "react";
 
 const socialLinks = [
   {
-    name: 'LinkedIn',
+    name: "LinkedIn",
     icon: Linkedin,
-    href: 'https://www.linkedin.com/in/ahmed-a-abo-ellil-7b0253275/',
-    color: 'hover:bg-blue-700',
+    href: "https://www.linkedin.com/in/ahmed-a-abo-ellil-7b0253275/",
   },
   {
-    name: 'Facebook',
+    name: "Facebook",
     icon: Facebook,
-    href: 'https://www.facebook.com/ahmed.atif.56481',
-    color: 'hover:bg-blue-600',
+    href: "https://www.facebook.com/ahmed.atif.56481",
   },
   {
-    name: 'WhatsApp',
+    name: "WhatsApp",
     icon: MessageCircle,
-    href: 'https://wa.me/201021752365',
-    color: 'hover:bg-green-600',
+    href: "https://wa.me/201021752365?text=مرحبا",
   },
-  {
-    name: 'Instagram',
-    icon: Instagram,
-    href: 'https://www.instagram.com/ahmed_atief27/',
-    color: 'hover:bg-pink-600',
-  },
-  {
-    name: 'GitHub',
-    icon: Github,
-    href: 'https://github.com/ahmedaboelli27',
-    color: 'hover:bg-gray-800',
-  }
-
-
 ];
 
 export default function Contact() {
+  const [showTop, setShowTop] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const email = "ahmed.atief@email.com"; // ✏️ ضع إيميلك الحقيقي هنا
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowTop(window.scrollY > 400);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const copyEmail = () => {
+    navigator.clipboard.writeText(email);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   return (
-    <section id="contact" className="py-20 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-white mb-4">Get In Touch</h2>
-          <div className="w-20 h-1 bg-blue-400 mx-auto mb-8"></div>
+    <section
+      id="contact"
+      className="relative"
+      style={{ background: "linear-gradient(90deg, #243748, #4B749F)" }}
+    >
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-black/45"></div>
+
+      <div className="relative z-10 py-28 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        {/* Header */}
+        <div className="text-center mb-20">
+          <h2 className="text-4xl font-bold text-gray-100 mb-4">
+            Get In Touch
+          </h2>
+          <div className="w-20 h-1 bg-gray-300 mx-auto mb-8"></div>
           <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-            I'm always interested in hearing about new data analysis opportunities,
-            collaborations, or just having a conversation about data.
+            I'm always interested in hearing about new data analysis
+            opportunities, collaborations, or meaningful conversations about data.
           </p>
         </div>
 
         <div className="max-w-4xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+
+          {/* Social Links */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
             {socialLinks.map((social, index) => (
               <a
                 key={index}
                 href={social.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`flex items-center justify-center space-x-3 bg-white/10 backdrop-blur-sm p-6 rounded-lg ${social.color} transition-all duration-300 hover:scale-105 border border-white/20`}
+                className="flex items-center justify-center gap-3
+                           bg-white/10 backdrop-blur-md
+                           p-6 rounded-xl
+                           border border-white/20
+                           text-gray-200
+                           hover:bg-white/20
+                           hover:-translate-y-1
+                           hover:shadow-[0_15px_40px_rgba(0,0,0,0.45)]
+                           transition-all duration-300"
               >
-                <social.icon className="text-white" size={28} />
-                <span className="text-white font-semibold text-lg">{social.name}</span>
+                <social.icon size={26} />
+                <span className="font-semibold text-lg">
+                  {social.name}
+                </span>
               </a>
             ))}
           </div>
 
-          <div className="bg-white/10 backdrop-blur-sm rounded-lg p-8 border border-white/20">
+          {/* Email Card */}
+          <div className="mb-16">
+            <div className="bg-white/10 backdrop-blur-md
+                            border border-white/20
+                            rounded-2xl p-8 max-w-md mx-auto
+                            text-center
+                            hover:shadow-[0_20px_50px_rgba(0,0,0,0.45)]
+                            transition-all">
+              <div className="flex justify-center mb-4">
+                <Mail className="text-white" size={32} />
+              </div>
+
+              <h3 className="text-xl font-semibold text-white mb-2">
+                Email Address
+              </h3>
+
+              <p className="text-gray-300 text-sm mb-6 break-all">
+                {email}
+              </p>
+
+              <button
+                onClick={copyEmail}
+                className="inline-flex items-center gap-2
+                           px-6 py-2.5 rounded-lg
+                           border border-white/20
+                           text-gray-200
+                           hover:text-white
+                           hover:bg-white/10
+                           transition-all"
+              >
+                {copied ? <Check size={16} /> : <Copy size={16} />}
+                {copied ? "Copied" : "Copy Email"}
+              </button>
+            </div>
+          </div>
+
+          {/* CTA */}
+          <div className="bg-white/10 backdrop-blur-md rounded-xl p-10 border border-white/20 shadow-lg">
             <div className="text-center">
-              <Mail className="text-blue-400 mx-auto mb-4" size={48} />
-              <h3 className="text-2xl font-semibold text-white mb-4">
+              <MessageCircle className="text-gray-200 mx-auto mb-5" size={48} />
+
+              <h3 className="text-2xl font-semibold text-gray-100 mb-4">
                 Let's Start a Conversation
               </h3>
-              <p className="text-gray-300 mb-6">
-                Whether you have a project in mind, need data analysis consultation,
-                or just want to connect, I'd love to hear from you.
-              </p>
-              <a
-                href="https://wa.me/201021752365?text=ازيك%20يا%20هندسة%20بعد%20اذنك%20عاوزك%20فى%20شغل"
 
-                className="inline-flex items-center px-8 py-3 bg-green-600 text-white rounded-full hover:bg-green-700 transition-all duration-300 hover:scale-105 shadow-lg"
+              <p className="text-gray-300 mb-8 max-w-xl mx-auto">
+                Whether you have a project in mind, need data analysis consultation,
+                or just want to connect — I’d love to hear from you.
+              </p>
+
+              <a
+                href="https://wa.me/201021752365?text=مرحبا"
+                className="inline-flex items-center gap-2
+                           px-10 py-4 rounded-full
+                           border border-gray-300
+                           text-gray-100
+                           hover:bg-gray-100 hover:text-gray-900
+                           transition-all duration-300
+                           hover:scale-105"
               >
-                <MessageCircle className="mr-2" size={20} />
+                <MessageCircle size={20} />
                 Message on WhatsApp
               </a>
             </div>
           </div>
         </div>
 
-        <div className="text-center mt-16 pt-8 border-t border-white/20">
-          <p className="text-gray-400">
-            © 2024 Ahmed Atief Abo-Ellil. All rights reserved.
+        {/* Footer */}
+        <footer className="text-center mt-20 pt-8 border-t border-white/20">
+          <p className="text-gray-400 text-sm">
+            © 2024 Ahmed Atief Abo-Ellil — Data Analyst Portfolio
           </p>
-        </div>
+        </footer>
       </div>
+
+      {/* Back to Top Button */}
+      {showTop && (
+        <button
+          onClick={scrollToTop}
+          className="fixed bottom-8 right-8 z-50
+                     bg-white/20 backdrop-blur-md
+                     border border-white/30
+                     text-gray-100
+                     p-3 rounded-full
+                     shadow-lg
+                     hover:bg-white hover:text-gray-900
+                     transition-all duration-300
+                     hover:-translate-y-1"
+        >
+          <ChevronUp size={22} />
+        </button>
+      )}
     </section>
   );
 }

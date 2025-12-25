@@ -1,84 +1,167 @@
-import { ExternalLink } from 'lucide-react';
+import { ExternalLink } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const projects = [
   {
-    title: 'Sales Performance Dashboard',
-    description: 'Interactive dashboard analyzing sales trends across multiple regions with real-time data visualization and predictive analytics.',
-    image: 'https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg?auto=compress&cs=tinysrgb&w=800',
-    tags: ['Python', 'Tableau', 'SQL'],
+    title: "Project Portfolio Management Dashboard",
+    description:
+      "A comprehensive portfolio management dashboard designed to provide executives with full visibility over project lifecycles. The dashboard tracks project approvals, execution progress, budget utilization, and schedule performance, enabling proactive portfolio-level decision-making.",
+    kpis: [
+      "Schedule Performance Index (SPI)",
+      "Cost Performance Index (CPI)",
+      "Budget Utilization %",
+      "Project Status Distribution",
+      "Operational Readiness Level",
+    ],
+    image: "/project-manager.png",
+    route: "/projects/Project_Manager",
+    tags: ["Power BI", "Portfolio Management", "KPIs"],
   },
   {
-    title: 'Customer Segmentation Analysis',
-    description: 'Machine learning model to segment customers based on behavior patterns, improving marketing campaign effectiveness by 40%.',
-    image: 'https://images.pexels.com/photos/7735675/pexels-photo-7735675.jpeg?auto=compress&cs=tinysrgb&w=800',
-    tags: ['Python', 'Machine Learning', 'Clustering'],
+    title: "Sales & Revenue Analytics Dashboard",
+    description:
+      "An interactive sales analytics dashboard built to evaluate revenue performance across time, products, and customer segments. It enables stakeholders to identify growth drivers, monitor profitability, and assess sales efficiency trends.",
+    kpis: [
+      "Total Revenue",
+      "Gross Profit Margin",
+      "Orders Count",
+      "Return Rate %",
+      "Month-over-Month Growth",
+    ],
+    image: "/adventure-works.png",
+    route: "/projects/Adventure_Works",
+    tags: ["Power BI", "Sales Analytics", "DAX"],
   },
   {
-    title: 'Financial Forecasting Model',
-    description: 'Time series analysis and forecasting model for revenue prediction with 95% accuracy, supporting strategic planning.',
-    image: 'https://images.pexels.com/photos/7947661/pexels-photo-7947661.jpeg?auto=compress&cs=tinysrgb&w=800',
-    tags: ['R', 'Time Series', 'Statistics'],
+    title: "Retail Market Performance Dashboard",
+    description:
+      "A retail intelligence solution focused on analyzing transaction volume, geographic performance, and profitability. The dashboard supports both operational monitoring and strategic planning through comparative and trend-based insights.",
+    kpis: [
+      "Revenue vs Target",
+      "Average Transaction Value",
+      "Profit Margin %",
+      "Return Rate",
+      "Top Performing Regions",
+    ],
+    image: "/maven-market.png",
+    route: "/projects/Maven_Market",
+    tags: ["Power BI", "Retail Analytics", "Data Visualization"],
   },
   {
-    title: 'Market Research Analytics',
-    description: 'Comprehensive market analysis combining survey data, social media sentiment, and competitor intelligence.',
-    image: 'https://images.pexels.com/photos/669615/pexels-photo-669615.jpeg?auto=compress&cs=tinysrgb&w=800',
-    tags: ['Excel', 'Power BI', 'Data Mining'],
-  },
-  {
-    title: 'Supply Chain Optimization',
-    description: 'Data-driven approach to optimize inventory levels and reduce costs, resulting in 25% efficiency improvement.',
-    image: 'https://images.pexels.com/photos/4483610/pexels-photo-4483610.jpeg?auto=compress&cs=tinysrgb&w=800',
-    tags: ['Python', 'Optimization', 'Analytics'],
-  },
-  {
-    title: 'Healthcare Data Analysis',
-    description: 'Patient data analysis to identify treatment patterns and improve healthcare outcomes through predictive modeling.',
-    image: 'https://images.pexels.com/photos/4386466/pexels-photo-4386466.jpeg?auto=compress&cs=tinysrgb&w=800',
-    tags: ['SQL', 'Visualization', 'Healthcare'],
+    title: "CRM & Leads Conversion Dashboard",
+    description:
+      "A CRM analytics dashboard designed to assess lead generation effectiveness and sales pipeline health. It provides insights into conversion efficiency, deal progression, and overall sales performance trends.",
+    kpis: [
+      "Leads Count",
+      "Conversion Rate %",
+      "Average Deal Value",
+      "Pipeline Value",
+      "Closed-Won Deals",
+    ],
+    image: "/business.png",
+    route: "/projects/Business_Project",
+    tags: ["Power BI", "CRM Analytics", "Business Intelligence"],
   },
 ];
 
 export default function Projects() {
+  const navigate = useNavigate();
+
   return (
-    <section id="projects" className="py-20 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">My Projects</h2>
-          <div className="w-20 h-1 bg-blue-600 mx-auto mb-8"></div>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Explore a selection of my recent data analysis projects showcasing various
-            techniques and tools in the field of data analytics.
+    <section
+      id="projects"
+      className="py-28 relative"
+      style={{
+        background: "linear-gradient(90deg, #0E1C26, #2A454B, #294861)",
+      }}
+    >
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-black/45"></div>
+
+      <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        {/* Header */}
+        <div className="text-center mb-20">
+          <h2 className="text-4xl font-bold text-gray-100 mb-4">
+            My Projects
+          </h2>
+          <div className="w-20 h-1 bg-gray-400 mx-auto mb-8"></div>
+          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+            A selection of real-world business intelligence dashboards focused
+            on performance monitoring, analytical insights, and decision support.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {/* Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
           {projects.map((project, index) => (
             <div
               key={index}
-              className="group bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2"
+              onClick={() => navigate(project.route)}
+              className="group cursor-pointer
+                         bg-[#16252F] rounded-xl overflow-hidden
+                         shadow-lg shadow-black/40
+                         hover:shadow-black/70
+                         transition-all duration-300
+                         hover:-translate-y-2"
             >
-              <div className="relative overflow-hidden h-48">
+              {/* Image */}
+              <div className="relative overflow-hidden h-56 bg-black/30">
                 <img
                   src={project.image}
                   alt={project.title}
-                  className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
+                  className="w-full h-full object-contain p-4
+                             transform group-hover:scale-105
+                             transition-transform duration-500"
                 />
-                <div className="absolute inset-0 bg-blue-900 opacity-0 group-hover:opacity-75 transition-opacity duration-300 flex items-center justify-center">
-                  <ExternalLink className="text-white" size={32} />
+
+                <div
+                  className="absolute inset-0 bg-black/70 opacity-0
+                             group-hover:opacity-100
+                             transition-opacity duration-300
+                             flex items-center justify-center"
+                >
+                  <ExternalLink className="text-gray-100" size={32} />
                 </div>
               </div>
 
-              <div className="p-6">
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">
+              {/* Content */}
+              <div className="p-6 flex flex-col h-full">
+                <h3 className="text-xl font-semibold text-gray-100 mb-3">
                   {project.title}
                 </h3>
-                <p className="text-gray-600 mb-4">{project.description}</p>
-                <div className="flex flex-wrap gap-2">
-                  {project.tags.map((tag, tagIndex) => (
+
+                <p className="text-gray-300 mb-5 leading-relaxed text-sm">
+                  {project.description}
+                </p>
+
+                {/* KPIs */}
+                <div className="mb-5">
+                  <p className="text-xs uppercase tracking-wide text-gray-400 mb-2">
+                    Key KPIs
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {project.kpis.map((kpi, i) => (
+                      <span
+                        key={i}
+                        className="px-3 py-1
+                                   bg-gray-700/60 text-gray-200
+                                   text-xs rounded-full"
+                      >
+                        {kpi}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Tags */}
+                <div className="flex flex-wrap gap-2 mt-auto">
+                  {project.tags.map((tag, i) => (
                     <span
-                      key={tagIndex}
-                      className="px-3 py-1 bg-blue-100 text-blue-600 text-sm rounded-full"
+                      key={i}
+                      className="px-3 py-1
+                                 bg-gray-600/40 text-gray-200
+                                 text-xs rounded-full"
                     >
                       {tag}
                     </span>
@@ -88,6 +171,7 @@ export default function Projects() {
             </div>
           ))}
         </div>
+
       </div>
     </section>
   );
