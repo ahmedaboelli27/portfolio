@@ -16,7 +16,7 @@ export default function Hero() {
   const [copied, setCopied] = useState(false);
   const [showEmail, setShowEmail] = useState(false);
 
-  const EMAIL = "ahmed.atief@email.com"; // ← ضع الإيميل الحقيقي هنا
+  const EMAIL = "ahmed.aboellil27@gmail.com"; // ← ضع الإيميل الحقيقي هنا
 
   const scrollToAbout = () => {
     document.getElementById("about")?.scrollIntoView({ behavior: "smooth" });

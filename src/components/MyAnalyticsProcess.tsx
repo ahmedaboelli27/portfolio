@@ -6,7 +6,7 @@ import {
     Target,
 } from "lucide-react";
 import { useEffect, useRef } from "react";
-import "./css/scrollAnimations.css";
+import './styles/scrollAnimations.css';
 
 type Step = {
     title: string;

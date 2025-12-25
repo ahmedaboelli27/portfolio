@@ -31,7 +31,7 @@ export default function Contact() {
   const [showTop, setShowTop] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const email = "ahmed.atief@email.com"; // ✏️ ضع إيميلك الحقيقي هنا
+  const email = "ahmed.aboellil27@gmail.com";
 
   useEffect(() => {
     const handleScroll = () => {
