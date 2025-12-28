@@ -6,6 +6,7 @@ import Contact from './components/Contact';
 import Hero from './components/Hero';
 import MyAnalyticsProcess from "./components/MyAnalyticsProcess";
 import Navigation from './components/Navigation';
+import ProfessionalDevelopment from "./components/ProfessionalDevelopment";
 import Projects from './components/Projects';
 import Adventure_Works from './components/Projects/Adventure_Works';
 import Business_Project from './components/Projects/Business_Project';
@@ -34,6 +35,7 @@ function App() {
                 <UseCases />
                 <BusinessImpact />
                 <Projects />
+                <ProfessionalDevelopment />
                 <Contact />
               </>
             }

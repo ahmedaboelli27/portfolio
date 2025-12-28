@@ -7,6 +7,9 @@ type Particle = {
   vx: number;
   vy: number;
   r: number;
+  alpha: number;
+  alphaDir: number;
+  depth: number;
 };
 
 export default function Hero() {
@@ -16,7 +19,7 @@ export default function Hero() {
   const [copied, setCopied] = useState(false);
   const [showEmail, setShowEmail] = useState(false);
 
-  const EMAIL = "ahmed.aboellil27@gmail.com"; // ← ضع الإيميل الحقيقي هنا
+  const EMAIL = "ahmed.aboellil27@gmail.com";
 
   const scrollToAbout = () => {
     document.getElementById("about")?.scrollIntoView({ behavior: "smooth" });
@@ -28,7 +31,6 @@ export default function Hero() {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  /* ========= Show Gmail after 2s (attention trick) ========= */
   useEffect(() => {
     const timer = setTimeout(() => setShowEmail(true), 2000);
     return () => clearTimeout(timer);
@@ -43,10 +45,14 @@ export default function Hero() {
     if (!ctx) return;
 
     let animationId = 0;
+    let lastTime = 0;
+    const FPS_LIMIT = 60;
+    const FRAME_INTERVAL = 500 / FPS_LIMIT;
 
-    const PARTICLE_COUNT = 200;
-    const MAX_DISTANCE = 200;
-    const MOUSE_RADIUS = 120;
+    const isMobile = window.innerWidth < 768;
+
+    const PARTICLE_COUNT = isMobile ? 60 : 140;
+    const MAX_DISTANCE = isMobile ? 90 : 130;
 
     const particles: Particle[] = [];
 
@@ -58,56 +64,103 @@ export default function Hero() {
     resize();
 
     for (let i = 0; i < PARTICLE_COUNT; i++) {
+      const depth = Math.random();
       particles.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        vx: (Math.random() - 0.5) * 1,
-        vy: (Math.random() - 0.5) * 1,
-        r: 0.9,
+        vx: (Math.random() - 0.5) * (0.2 + depth * 0.6),
+        vy: (Math.random() - 0.5) * (0.2 + depth * 0.6),
+        r: 1 + depth * 2.3,
+        alpha: Math.random() * 0.8 + 0.2,
+        alphaDir: Math.random() > 0.5 ? 1 : -1,
+        depth,
       });
     }
 
-    const animate = () => {
+    const drawStar = (
+      cx: number,
+      cy: number,
+      spikes: number,
+      outerRadius: number,
+      innerRadius: number,
+      alpha: number
+    ) => {
+      let rot = Math.PI / 2 * 3;
+      const step = Math.PI / spikes;
+
+      ctx.beginPath();
+      ctx.moveTo(cx, cy - outerRadius);
+
+      for (let i = 0; i < spikes; i++) {
+        ctx.lineTo(
+          cx + Math.cos(rot) * outerRadius,
+          cy + Math.sin(rot) * outerRadius
+        );
+        rot += step;
+
+        ctx.lineTo(
+          cx + Math.cos(rot) * innerRadius,
+          cy + Math.sin(rot) * innerRadius
+        );
+        rot += step;
+      }
+
+      ctx.closePath();
+      ctx.fillStyle = `rgba(255,255,255,${alpha})`;
+      ctx.fill();
+    };
+
+    const animate = (time: number) => {
+      if (time - lastTime < FRAME_INTERVAL) {
+        animationId = requestAnimationFrame(animate);
+        return;
+      }
+      lastTime = time;
+
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      particles.forEach((p) => {
+      for (const p of particles) {
         p.x += p.vx;
         p.y += p.vy;
 
         if (p.x <= 0 || p.x >= canvas.width) p.vx *= -1;
         if (p.y <= 0 || p.y >= canvas.height) p.vy *= -1;
 
+        // Parallax only if mouse active
         if (mouse.current.active) {
-          const dx = p.x - mouse.current.x;
-          const dy = p.y - mouse.current.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-
-          if (dist < MOUSE_RADIUS) {
-            p.x += dx * 0.015;
-            p.y += dy * 0.015;
-          }
+          p.x +=
+            (mouse.current.x - canvas.width / 2) * 0.00035 * p.depth;
+          p.y +=
+            (mouse.current.y - canvas.height / 2) * 0.00035 * p.depth;
         }
 
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(255,255,255,0.65)";
-        ctx.fill();
-      });
+        // Twinkle
+        p.alpha += p.alphaDir * 0.006;
+        if (p.alpha <= 0.25 || p.alpha >= 0.95) p.alphaDir *= -1;
 
-      for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-          const dx = particles[i].x - particles[j].x;
-          const dy = particles[i].y - particles[j].y;
-          const dist = Math.hypot(dx, dy);
+        drawStar(p.x, p.y, 5, p.r * 2.1, p.r, p.alpha);
+      }
 
-          if (dist < MAX_DISTANCE) {
-            ctx.strokeStyle = `rgba(255,255,255,${0.22 * (1 - dist / MAX_DISTANCE)
-              })`;
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.moveTo(particles[i].x, particles[i].y);
-            ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.stroke();
+      // Connections (desktop only)
+      if (!isMobile) {
+        for (let i = 0; i < particles.length; i++) {
+          for (let j = i + 1; j < particles.length; j++) {
+            const a = particles[i];
+            const b = particles[j];
+
+            const dx = a.x - b.x;
+            const dy = a.y - b.y;
+            const distSq = dx * dx + dy * dy;
+
+            if (distSq < MAX_DISTANCE * MAX_DISTANCE) {
+              ctx.strokeStyle = `rgba(255,255,255,${0.1 * (1 - distSq / (MAX_DISTANCE * MAX_DISTANCE))
+                })`;
+              ctx.lineWidth = 0.6;
+              ctx.beginPath();
+              ctx.moveTo(a.x, a.y);
+              ctx.lineTo(b.x, b.y);
+              ctx.stroke();
+            }
           }
         }
       }
@@ -115,7 +168,7 @@ export default function Hero() {
       animationId = requestAnimationFrame(animate);
     };
 
-    animate();
+    animationId = requestAnimationFrame(animate);
 
     const handleMouseMove = (e: MouseEvent) => {
       mouse.current.x = e.clientX;
@@ -149,7 +202,6 @@ export default function Hero() {
       <div className="absolute inset-0 bg-black/40"></div>
 
       <div className="relative z-10 text-center px-4">
-        {/* Profile */}
         <div className="mb-10 flex justify-center">
           <img
             src="/profile.png"
@@ -173,7 +225,6 @@ export default function Hero() {
           decisions through analytics
         </p>
 
-        {/* CTA Buttons */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
           <button
             onClick={scrollToAbout}
@@ -186,16 +237,17 @@ export default function Hero() {
             <ChevronDown className="animate-bounce" />
           </button>
 
-          {/* Gmail Button */}
           {showEmail && (
             <div className="relative group">
-              {/* Tooltip */}
               <div
                 className={`absolute -top-10 left-1/2 -translate-x-1/2
                             px-3 py-1 rounded-md text-sm
                             bg-black/80 text-white
                             transition-all duration-300
-                            ${copied ? "opacity-100 scale-100" : "opacity-0 scale-90"}`}
+                            ${copied
+                    ? "opacity-100 scale-100"
+                    : "opacity-0 scale-90"
+                  }`}
               >
                 Copied to clipboard
               </div>
@@ -209,7 +261,10 @@ export default function Hero() {
                             text-gray-100
                             hover:bg-white/20
                             transition-all duration-300
-                            ${copied ? "scale-110 animate-pulse" : "hover:-translate-y-1"}`}
+                            ${copied
+                    ? "scale-110 animate-pulse"
+                    : "hover:-translate-y-1"
+                  }`}
               >
                 <Mail size={20} />
                 <span className="text-sm md:text-base">
@@ -221,7 +276,6 @@ export default function Hero() {
           )}
         </div>
 
-        {/* mailto */}
         <a
           href={`mailto:${EMAIL}`}
           className="mt-4 block text-sm text-gray-300 hover:text-white transition"

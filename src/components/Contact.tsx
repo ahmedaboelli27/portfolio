@@ -7,7 +7,7 @@ import {
   Mail,
   MessageCircle,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const socialLinks = [
   {
@@ -27,9 +27,20 @@ const socialLinks = [
   },
 ];
 
+type Star = {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  r: number;
+  alpha: number;
+  alphaDir: number;
+};
+
 export default function Contact() {
   const [showTop, setShowTop] = useState(false);
   const [copied, setCopied] = useState(false);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   const email = "ahmed.aboellil27@gmail.com";
 
@@ -39,6 +50,76 @@ export default function Contact() {
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  /* ⭐ Stars Background (Contact Section) */
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    let animationId = 0;
+
+    // 🔧 MODIFICATIONS HERE
+    const STAR_COUNT = Math.floor(120 * 1.35); // +35%
+    const SIZE_MULTIPLIER = 1.25; // +25%
+
+    const stars: Star[] = [];
+
+    const resize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height =
+        canvas.parentElement?.offsetHeight || window.innerHeight;
+    };
+
+    resize();
+
+    for (let i = 0; i < STAR_COUNT; i++) {
+      stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        vx: (Math.random() - 0.5) * 0.25,
+        vy: (Math.random() - 0.5) * 0.25,
+        r: (Math.random() * 1.2 + 0.5) * SIZE_MULTIPLIER, // size increased
+        alpha: Math.random() * 0.8 + 0.2,
+        alphaDir: Math.random() > 0.5 ? 1 : -1,
+      });
+    }
+
+    const animate = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      for (const s of stars) {
+        s.x += s.vx;
+        s.y += s.vy;
+
+        if (s.x < 0) s.x = canvas.width;
+        if (s.x > canvas.width) s.x = 0;
+        if (s.y < 0) s.y = canvas.height;
+        if (s.y > canvas.height) s.y = 0;
+
+        // ✨ Twinkle
+        s.alpha += s.alphaDir * 0.006;
+        if (s.alpha <= 0.2 || s.alpha >= 0.9) s.alphaDir *= -1;
+
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255,255,255,${s.alpha})`;
+        ctx.fill();
+      }
+
+      animationId = requestAnimationFrame(animate);
+    };
+
+    animate();
+    window.addEventListener("resize", resize);
+
+    return () => {
+      cancelAnimationFrame(animationId);
+      window.removeEventListener("resize", resize);
+    };
   }, []);
 
   const scrollToTop = () => {
@@ -54,12 +135,19 @@ export default function Contact() {
   return (
     <section
       id="contact"
-      className="relative"
+      className="relative overflow-hidden"
       style={{ background: "linear-gradient(90deg, #243748, #4B749F)" }}
     >
-      {/* Overlay */}
-      <div className="absolute inset-0 bg-black/45"></div>
+      {/* ⭐ Stars Canvas */}
+      <canvas
+        ref={canvasRef}
+        className="absolute inset-0 w-full h-full z-0"
+      />
 
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-black/45 z-[1]"></div>
+
+      {/* Content */}
       <div className="relative z-10 py-28 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Header */}
