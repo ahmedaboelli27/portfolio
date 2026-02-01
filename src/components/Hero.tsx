@@ -21,8 +21,8 @@ export default function Hero() {
 
   const EMAIL = "ahmed.aboellil27@gmail.com";
 
-  const scrollToAbout = () => {
-    document.getElementById("about")?.scrollIntoView({ behavior: "smooth" });
+  const scrollToProjects = () => {
+    document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" });
   };
 
   const copyEmail = () => {
@@ -70,42 +70,16 @@ export default function Hero() {
         y: Math.random() * canvas.height,
         vx: (Math.random() - 0.5) * (0.2 + depth * 0.6),
         vy: (Math.random() - 0.5) * (0.2 + depth * 0.6),
-        r: 1 + depth * 2.3,
+        r: 1.2 + depth * 2.5,
         alpha: Math.random() * 0.8 + 0.2,
         alphaDir: Math.random() > 0.5 ? 1 : -1,
         depth,
       });
     }
 
-    const drawStar = (
-      cx: number,
-      cy: number,
-      spikes: number,
-      outerRadius: number,
-      innerRadius: number,
-      alpha: number
-    ) => {
-      let rot = Math.PI / 2 * 3;
-      const step = Math.PI / spikes;
-
+    const drawBall = (x: number, y: number, r: number, alpha: number) => {
       ctx.beginPath();
-      ctx.moveTo(cx, cy - outerRadius);
-
-      for (let i = 0; i < spikes; i++) {
-        ctx.lineTo(
-          cx + Math.cos(rot) * outerRadius,
-          cy + Math.sin(rot) * outerRadius
-        );
-        rot += step;
-
-        ctx.lineTo(
-          cx + Math.cos(rot) * innerRadius,
-          cy + Math.sin(rot) * innerRadius
-        );
-        rot += step;
-      }
-
-      ctx.closePath();
+      ctx.arc(x, y, r, 0, Math.PI * 2);
       ctx.fillStyle = `rgba(255,255,255,${alpha})`;
       ctx.fill();
     };
@@ -126,7 +100,6 @@ export default function Hero() {
         if (p.x <= 0 || p.x >= canvas.width) p.vx *= -1;
         if (p.y <= 0 || p.y >= canvas.height) p.vy *= -1;
 
-        // Parallax only if mouse active
         if (mouse.current.active) {
           p.x +=
             (mouse.current.x - canvas.width / 2) * 0.00035 * p.depth;
@@ -134,14 +107,12 @@ export default function Hero() {
             (mouse.current.y - canvas.height / 2) * 0.00035 * p.depth;
         }
 
-        // Twinkle
         p.alpha += p.alphaDir * 0.006;
         if (p.alpha <= 0.25 || p.alpha >= 0.95) p.alphaDir *= -1;
 
-        drawStar(p.x, p.y, 5, p.r * 2.1, p.r, p.alpha);
+        drawBall(p.x, p.y, p.r, p.alpha);
       }
 
-      // Connections (desktop only)
       if (!isMobile) {
         for (let i = 0; i < particles.length; i++) {
           for (let j = i + 1; j < particles.length; j++) {
@@ -153,9 +124,9 @@ export default function Hero() {
             const distSq = dx * dx + dy * dy;
 
             if (distSq < MAX_DISTANCE * MAX_DISTANCE) {
-              ctx.strokeStyle = `rgba(255,255,255,${0.1 * (1 - distSq / (MAX_DISTANCE * MAX_DISTANCE))
+              ctx.strokeStyle = `rgba(255,255,255,${0.18 * (1 - distSq / (MAX_DISTANCE * MAX_DISTANCE))
                 })`;
-              ctx.lineWidth = 0.6;
+              ctx.lineWidth = 0.9;
               ctx.beginPath();
               ctx.moveTo(a.x, a.y);
               ctx.lineTo(b.x, b.y);
@@ -227,7 +198,7 @@ export default function Hero() {
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
           <button
-            onClick={scrollToAbout}
+            onClick={scrollToProjects}
             className="inline-flex items-center gap-2 px-10 py-4 rounded-full
                        border border-gray-300 text-gray-100
                        hover:bg-gray-100 hover:text-gray-900

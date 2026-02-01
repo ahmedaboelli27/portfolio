@@ -169,27 +169,52 @@ export default function Navigation() {
             />
           </button>
 
+
           {/* Desktop Menu */}
-          <div className="hidden md:flex items-center gap-8 text-base font-medium">
+          <div className="hidden md:flex items-center gap-6 text-sm font-medium">
             {NAV_ITEMS.map((item) => {
               const isActive = activeSection === item.id;
+
               return (
                 <button
                   key={item.id}
                   onClick={() => scrollToSection(item.id)}
-                  className={`relative transition-colors
-                  ${isActive
-                      ? "text-white after:w-full"
-                      : "text-gray-300 hover:text-white after:w-0"
-                    }
-                  after:absolute after:-bottom-1 after:left-0 after:h-[2px]
-                  after:bg-white after:transition-all after:duration-300`}
+                  className="group relative flex items-center"
                 >
-                  {item.label}
+                  {/* Silver Dot → Silver Border */}
+                  <span
+                    className={`
+            absolute left-0 top-1/2 -translate-y-1/2
+
+            w-1.5 h-1.5 rounded-full
+            border border-[#9aa3af]
+            shadow-[0_0_0_0_rgba(229,231,235,0.0)]
+            transition-all duration-[460ms] ease-out
+
+            ${isActive
+                        ? "w-full h-full rounded-lg px-3 py-1.5 left-1/2 -translate-x-1/2 border-[#e5e7eb] shadow-[0_0_14px_rgba(229,231,235,0.28)]"
+                        : "group-hover:w-full group-hover:h-full group-hover:rounded-lg group-hover:px-3 group-hover:py-1.5 group-hover:left-1/2 group-hover:-translate-x-1/2 group-hover:border-[#e5e7eb] group-hover:shadow-[0_0_14px_rgba(229,231,235,0.28)]"}
+          `}
+                  />
+
+                  {/* Text */}
+                  <span
+                    className={`
+            relative z-10 pl-5 pr-3 py-1.5 tracking-wide
+            transition-colors duration-300
+            ${isActive ? "text-white" : "text-gray-300 group-hover:text-white"}
+          `}
+                  >
+                    {item.label}
+                  </span>
                 </button>
               );
             })}
           </div>
+
+
+
+
 
           {/* Mobile Toggle */}
           <button
@@ -212,10 +237,10 @@ export default function Navigation() {
               <button
                 key={item.id}
                 onClick={() => scrollToSection(item.id)}
-                className={`block w-full text-left py-2 text-lg transition-colors
+                className={`block w-full text-left py-2 text-lg transition-all duration-300
                 ${activeSection === item.id
-                    ? "text-white font-semibold"
-                    : "text-gray-200 hover:text-white"
+                    ? "text-white font-semibold translate-x-2"
+                    : "text-gray-200 hover:text-white hover:translate-x-2"
                   }`}
               >
                 {item.label}
