@@ -81,7 +81,7 @@ export default function UseCases() {
         <section
             id="usecases"
             className="relative py-24 overflow-hidden"
-            style={{ background: "linear-gradient(90deg, #243748, #4B749F)" }}
+            style={{ background: "rgb(0,0,0,0.4)" }}
         >
             {/* Overlay */}
             <div className="absolute inset-0 bg-black/55" />

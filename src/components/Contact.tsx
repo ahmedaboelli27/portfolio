@@ -63,8 +63,8 @@ export default function Contact() {
     let animationId = 0;
 
     // 🔧 MODIFICATIONS HERE
-    const STAR_COUNT = Math.floor(120 * 1.35); // +35%
-    const SIZE_MULTIPLIER = 1.25; // +25%
+    const STAR_COUNT = Math.floor(120 * 1.70); // +35%
+    const SIZE_MULTIPLIER = 1.5; // +25%
 
     const stars: Star[] = [];
 
@@ -82,7 +82,7 @@ export default function Contact() {
         y: Math.random() * canvas.height,
         vx: (Math.random() - 0.5) * 0.25,
         vy: (Math.random() - 0.5) * 0.25,
-        r: (Math.random() * 1.2 + 0.5) * SIZE_MULTIPLIER, // size increased
+        r: (Math.random() * 2.2 + 1.1) * SIZE_MULTIPLIER, // size increased
         alpha: Math.random() * 0.8 + 0.2,
         alphaDir: Math.random() > 0.5 ? 1 : -1,
       });
@@ -136,7 +136,7 @@ export default function Contact() {
     <section
       id="contact"
       className="relative overflow-hidden"
-      style={{ background: "linear-gradient(90deg, #243748, #4B749F)" }}
+      style={{ background: "rgb(0,0,0,0.4)" }}
     >
       {/* ⭐ Stars Canvas */}
       <canvas

@@ -38,7 +38,7 @@ export default function BusinessImpact() {
         <section
             id="businessimpact"
             className="py-28 relative"
-            style={{ background: "linear-gradient(90deg, #243748, #4B749F)" }}
+            style={{ background: "rgb(0,0,0,0.4" }}
         >
             {/* Overlay */}
             <div className="absolute inset-0 bg-black/45"></div>

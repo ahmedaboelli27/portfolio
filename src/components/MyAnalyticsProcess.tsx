@@ -108,9 +108,10 @@ export default function MyAnalyticsProcess() {
         <section
             id="process"
             className="relative py-32"
-            style={{ background: "linear-gradient(90deg, #243748, #4B749F)" }}
+            style={{ background: "rgba(0,0,0,0.4)" }} 
         >
-            <div className="absolute inset-0 bg-black/45" />
+            {/* Overlay شفاف */}
+            <div className="absolute inset-0" />
 
             <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Header */}

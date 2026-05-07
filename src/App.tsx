@@ -1,6 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
-import InteractiveBackground from "./components/InteractiveBackground";
 import Navigation from "./components/Navigation";
 
 import About from "./components/About";
@@ -20,14 +19,19 @@ import Project_Manager from "./components/Projects/Project_Maneger";
 function App() {
   return (
     <BrowserRouter>
-      {/* Mouse Effect */}
-      <InteractiveBackground />
-
-      <div className="min-h-screen bg-white relative">
+      <div
+        className="min-h-screen bg-transparent relative"
+        style={{
+          backgroundImage: "url('/hero_background.png')",
+          backgroundAttachment: "fixed",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+        }}
+      >
         <Navigation />
 
         <Routes>
-          {/* Home */}
           <Route
             path="/"
             element={
@@ -44,23 +48,10 @@ function App() {
             }
           />
 
-          {/* Projects */}
-          <Route
-            path="/projects/Project_Manager"
-            element={<Project_Manager />}
-          />
-          <Route
-            path="/projects/Adventure_Works"
-            element={<Adventure_Works />}
-          />
-          <Route
-            path="/projects/Business_Project"
-            element={<Business_Project />}
-          />
-          <Route
-            path="/projects/Maven_Market"
-            element={<Maven_Market />}
-          />
+          <Route path="/projects/Project_Manager" element={<Project_Manager />} />
+          <Route path="/projects/Adventure_Works" element={<Adventure_Works />} />
+          <Route path="/projects/Business_Project" element={<Business_Project />} />
+          <Route path="/projects/Maven_Market" element={<Maven_Market />} />
         </Routes>
       </div>
     </BrowserRouter>
