@@ -122,14 +122,14 @@ export default function Projects() {
     <section id="projects" className="relative py-28 overflow-hidden">
       {/* Background Image */}
       <div
-        className="absolute inset-0 bg-cover bg-center scale-110 blur-[2px]"
+        className="absolute inset-0 bg-cover bg-center scale-110 blur-[0.5px]"
         style={{
           backgroundImage: "url('/project_background.jpeg')",
         }}
       ></div>
 
       {/* Dark Overlay */}
-      <div className="absolute inset-0 bg-[#07131C]/80"></div>
+      <div className="absolute inset-0 bg-[#07131C]/30"></div>
       <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-[#0E1C26]/70 to-black/60"></div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

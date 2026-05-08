@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import { AlertTriangle, DollarSign, TrendingUp } from "lucide-react";
 
 const useCases = [
@@ -5,31 +6,31 @@ const useCases = [
         title: "Marketing Spend Optimization",
         icon: DollarSign,
         problem:
-            "Advertising costs were increasing while revenue growth remained flat, making it difficult to justify marketing investments.",
+            "Advertising budgets were rising while revenue growth remained stagnant, making it challenging to justify marketing expenditures.",
         solution:
-            "By analyzing ROAS and ROI across channels, I identified underperforming campaigns and reallocated budget toward high-performing platforms.",
+            "Analyzed ROAS and ROI across multiple channels, identified underperforming campaigns, and reallocated budget toward high-performing platforms to maximize impact.",
         impact:
-            "Reduced wasted ad spend by 16% and improved overall marketing ROI by 31%.",
+            "Reduced wasted ad spend by 16% and improved overall marketing ROI by 31%, ensuring resources are optimally used.",
     },
     {
         title: "Sales Funnel Performance Analysis",
         icon: TrendingUp,
         problem:
-            "The sales team struggled with low deal conversion rates and lacked visibility into where leads were dropping off.",
+            "The sales team faced low conversion rates and lacked visibility on where prospects were dropping off within the funnel.",
         solution:
-            "I built a full funnel analysis tracking leads, meetings, and deals by source, salesperson, and time period.",
+            "Built a comprehensive funnel analysis tracking leads, meetings, and deals by source, salesperson, and time period, identifying bottlenecks in the process.",
         impact:
-            "Improved deal conversion rate by highlighting critical drop-off stages and optimizing follow-up strategies.",
+            "Improved conversion rates by highlighting critical drop-off stages and optimizing follow-up strategies, leading to more predictable sales outcomes.",
     },
     {
         title: "Risk & Profitability Monitoring",
         icon: AlertTriangle,
         problem:
-            "Management had limited visibility into profit drivers and potential loss-making segments across the business.",
+            "Management had limited insights into profit drivers and potential loss-making areas across the business units.",
         solution:
-            "Developed income statement dashboards with profit margins, expense breakdowns, and trend analysis.",
+            "Developed interactive income statement dashboards highlighting profit margins, expense breakdowns, and trend analysis to support informed decision-making.",
         impact:
-            "Enabled early identification of loss risks and supported data-driven cost control decisions.",
+            "Enabled early identification of risks, supported data-driven cost control decisions, and improved financial performance visibility across departments.",
     },
 ];
 
@@ -38,7 +39,7 @@ export default function BusinessImpact() {
         <section
             id="businessimpact"
             className="py-28 relative"
-            style={{ background: "rgb(0,0,0,0.4" }}
+            style={{ background: "rgba(0,0,0,0.4)" }}
         >
             {/* Overlay */}
             <div className="absolute inset-0 bg-black/45"></div>
@@ -50,8 +51,8 @@ export default function BusinessImpact() {
                         Real Business Impact
                     </h2>
                     <p className="text-lg text-gray-300 max-w-3xl mx-auto">
-                        Practical use cases that demonstrate how data analytics translates
-                        into measurable business outcomes and strategic decisions.
+                        Practical use cases demonstrating how actionable insights from data analytics
+                        directly translate into measurable business results and informed strategic decisions.
                     </p>
                 </div>
 
@@ -60,8 +61,12 @@ export default function BusinessImpact() {
                     {useCases.map((item, index) => {
                         const Icon = item.icon;
                         return (
-                            <div
+                            <motion.div
                                 key={index}
+                                initial={{ opacity: 0, y: 40 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true, amount: 0.3 }}
+                                transition={{ duration: 0.6, delay: index * 0.15 }}
                                 className="
                   bg-white/10 backdrop-blur-md
                   border border-white/20
@@ -77,32 +82,24 @@ export default function BusinessImpact() {
                                   rounded-full bg-white/15 border border-white/30">
                                         <Icon className="text-white" size={26} />
                                     </div>
-                                    <h3 className="text-xl font-semibold text-white">
-                                        {item.title}
-                                    </h3>
+                                    <h3 className="text-xl font-semibold text-white">{item.title}</h3>
                                 </div>
 
                                 <div className="space-y-4 text-gray-300 text-sm leading-relaxed">
                                     <p>
-                                        <span className="font-semibold text-white">
-                                            Business Problem:
-                                        </span>{" "}
+                                        <span className="font-semibold text-white">Business Problem:</span>{" "}
                                         {item.problem}
                                     </p>
                                     <p>
-                                        <span className="font-semibold text-white">
-                                            Analytical Solution:
-                                        </span>{" "}
+                                        <span className="font-semibold text-white">Analytical Solution:</span>{" "}
                                         {item.solution}
                                     </p>
                                     <p>
-                                        <span className="font-semibold text-white">
-                                            Impact:
-                                        </span>{" "}
+                                        <span className="font-semibold text-white">Impact:</span>{" "}
                                         {item.impact}
                                     </p>
                                 </div>
-                            </div>
+                            </motion.div>
                         );
                     })}
                 </div>

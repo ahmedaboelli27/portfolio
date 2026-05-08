@@ -21,14 +21,12 @@ export default function Navigation() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const lastScrollY = useRef(0);
 
-  /* ================= Scroll state ================= */
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  /* ================= Active section highlight ================= */
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -53,7 +51,6 @@ export default function Navigation() {
     return () => observer.disconnect();
   }, []);
 
-  /* ================= Stars background ================= */
   useEffect(() => {
     if (!isScrolled) return;
     const canvas = canvasRef.current;
@@ -134,22 +131,21 @@ export default function Navigation() {
       {isScrolled && (
         <canvas
           ref={canvasRef}
-          className="absolute inset-0 w-full h-full pointer-events-none"
+          className="absolute inset-0 w-full h-full pointer-events-none z-10"
         />
       )}
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-20"> {/* ارتفاع أكبر بنسبة 25% */}
-
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-20">
+        <div className="flex justify-between items-center h-20">
           {/* Logo */}
           <button
             onClick={() => scrollToSection("hero")}
-            className="flex items-center transition-all duration-300 hover:scale-105 hover:drop-shadow-lg"
+            className="flex items-center transition-all duration-300 hover:scale-105 z-30"
           >
             <img
-              src="/AT-GROUP.png"
+              src="/logo.png"
               alt="AT GROUP Logo"
-              className="h-36 w-auto object-contain" // 25% أكبر من h-28
+              className="h-12 sm:h-16 md:h-20 w-auto object-contain"
             />
           </button>
 
@@ -187,10 +183,10 @@ export default function Navigation() {
 
           {/* Mobile Toggle */}
           <button
-            className="md:hidden text-white"
+            className="md:hidden text-white z-30"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
-            {isMobileMenuOpen ? <X size={32} /> : <Menu size={32} />} {/* أيقونات أكبر */}
+            {isMobileMenuOpen ? <X size={32} /> : <Menu size={32} />}
           </button>
         </div>
       </div>
@@ -198,19 +194,19 @@ export default function Navigation() {
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
         <div
-          className="md:hidden border-t border-white/10 rounded-b-3xl"
+          className="md:hidden border-t border-white/10 rounded-b-3xl z-20 max-h-[calc(100vh-80px)] overflow-y-auto"
           style={{
             background:
               "linear-gradient(90deg, rgba(27,47,63,0.95), rgba(59,95,130,0.95))",
             backdropFilter: "blur(18px) saturate(150%)",
           }}
         >
-          <div className="px-6 py-6 space-y-4">
+          <div className="px-6 py-8 space-y-4">
             {NAV_ITEMS.map((item) => (
               <button
                 key={item.id}
                 onClick={() => scrollToSection(item.id)}
-                className={`block w-full text-left py-3 text-xl transition-all duration-300 rounded-md
+                className={`block w-full text-left py-3 text-lg sm:text-xl transition-all duration-300 rounded-md
                   ${activeSection === item.id
                     ? "text-white font-semibold bg-white/15 shadow-[0_0_12px_rgba(255,255,255,0.3)]"
                     : "text-gray-200 hover:text-white hover:bg-white/10 hover:shadow-[0_0_8px_rgba(255,255,255,0.15)]"
