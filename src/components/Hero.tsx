@@ -191,7 +191,7 @@ export default function Hero() {
               ref={profileRef}
               src="/profile.png"
               alt="Ahmed Atief Abo-Ellil"
-              className="w-[260px] h-[260px] object-cover rounded-full transform scale-[1.2] transition-transform duration-200"
+              className="w-[260px] h-[260px] object-cover rounded-full transform scale-[1.08] transition-transform duration-200"
             />
           </div>
         </div>
