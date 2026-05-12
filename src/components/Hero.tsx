@@ -39,10 +39,6 @@ export default function Hero() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    let animationId = 0;
-    let lastTime = 0;
-    const FPS_LIMIT = 60;
-    const FRAME_INTERVAL = 500 / FPS_LIMIT;
     const isMobile = window.innerWidth < 768;
     const PARTICLE_COUNT = isMobile ? 60 : 140;
     const MAX_DISTANCE = isMobile ? 90 : 130;
@@ -59,8 +55,8 @@ export default function Hero() {
       particles.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        vx: (Math.random() - 0.5) * (0.2 + depth * 0.6),
-        vy: (Math.random() - 0.5) * (0.2 + depth * 0.6),
+        vx: (Math.random() - 0.5) * (0.4 + depth * 0.6),
+        vy: (Math.random() - 0.5) * (0.4 + depth * 0.6),
         r: 1.2 + depth * 2.5,
         alpha: Math.random() * 0.8 + 0.2,
         alphaDir: Math.random() > 0.5 ? 1 : -1,
@@ -75,36 +71,38 @@ export default function Hero() {
       ctx.fill();
     };
 
-    const animate = (time: number) => {
-      if (time - lastTime < FRAME_INTERVAL) {
-        animationId = requestAnimationFrame(animate);
-        return;
-      }
-      lastTime = time;
+    const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       const scrollDelta = window.scrollY;
 
       if (heroRef.current) {
-        const offsetX = mouse.current.active ? (mouse.current.x - window.innerWidth / 2) * 0.01 : 0;
+        const offsetX = mouse.current.active
+          ? (mouse.current.x - window.innerWidth / 2) * 0.01
+          : 0;
         const offsetY =
-          scrollDelta * 0.05 + (mouse.current.active ? (mouse.current.y - window.innerHeight / 2) * 0.01 : 0);
+          scrollDelta * 0.05 +
+          (mouse.current.active ? (mouse.current.y - window.innerHeight / 2) * 0.01 : 0);
         heroRef.current.style.backgroundPosition = `calc(50% + ${offsetX}px) calc(50% + ${offsetY}px)`;
       }
 
       for (const p of particles) {
+        // حركة مستمرة لا نهائية
         p.x += p.vx;
         p.y += p.vy;
 
-        if (p.x <= 0 || p.x >= canvas.width) p.vx *= -1;
-        if (p.y <= 0 || p.y >= canvas.height) p.vy *= -1;
+        if (p.x <= 0) p.x = canvas.width;
+        if (p.x >= canvas.width) p.x = 0;
+        if (p.y <= 0) p.y = canvas.height;
+        if (p.y >= canvas.height) p.y = 0;
 
         if (mouse.current.active) {
           p.x += (mouse.current.x - canvas.width / 2) * 0.00035 * p.depth;
           p.y += (mouse.current.y - canvas.height / 2) * 0.00035 * p.depth;
         }
 
-        p.alpha += p.alphaDir * 0.006;
+        // Alpha oscillation
+        p.alpha += p.alphaDir * 0.004; // أبطأ وأكثر نعومة
         if (p.alpha <= 0.25 || p.alpha >= 0.95) p.alphaDir *= -1;
 
         drawBall(p.x, p.y, p.r, p.alpha);
@@ -119,7 +117,8 @@ export default function Hero() {
             const dy = a.y - b.y;
             const distSq = dx * dx + dy * dy;
             if (distSq < MAX_DISTANCE * MAX_DISTANCE) {
-              ctx.strokeStyle = `rgba(255,255,255,${0.18 * (1 - distSq / (MAX_DISTANCE * MAX_DISTANCE))})`;
+              ctx.strokeStyle = `rgba(255,255,255,${0.18 * (1 - distSq / (MAX_DISTANCE * MAX_DISTANCE))
+                })`;
               ctx.lineWidth = 0.9;
               ctx.beginPath();
               ctx.moveTo(a.x, a.y);
@@ -130,10 +129,10 @@ export default function Hero() {
         }
       }
 
-      animationId = requestAnimationFrame(animate);
+      requestAnimationFrame(animate); // لا نهائي
     };
 
-    animationId = requestAnimationFrame(animate);
+    animate();
 
     const handleMouseMove = (e: MouseEvent) => {
       mouse.current.x = e.clientX;
@@ -147,8 +146,8 @@ export default function Hero() {
         const dy = e.clientY - (rect.top + rect.height / 2);
         const distance = Math.sqrt(dx * dx + dy * dy);
         const glow = Math.min(Math.max(20 - distance / 20, 0), 15);
-        profileRef.current.style.boxShadow = `0 0 ${glow}px rgba(255,255,255,0.8), 0 0 ${glow / 2
-          }px rgba(75,149,255,0.5)`;
+        profileRef.current.style.boxShadow = `0 0 ${glow}px rgba(255,255,255,0.8), 0 0 ${glow /
+          2}px rgba(75,149,255,0.5)`;
       }
     };
 
@@ -161,10 +160,10 @@ export default function Hero() {
 
     window.addEventListener("mousemove", handleMouseMove);
     window.addEventListener("mouseleave", handleMouseLeave);
+
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mouseleave", handleMouseLeave);
-      cancelAnimationFrame(animationId);
     };
   }, []);
 
@@ -174,14 +173,13 @@ export default function Hero() {
       ref={heroRef}
       className="relative h-screen flex items-center justify-center overflow-hidden"
       style={{
-        backgroundColor: "rgba(0,0,0,0.4)", // خلفية سوداء شفافة
+        backgroundColor: "rgba(0,0,0,0.4)",
         backgroundSize: "cover",
         backgroundPosition: "center",
         backdropFilter: "blur(14px) saturate(180%)",
         transition: "background-position 0.2s ease-out",
       }}
     >
-      {/* Canvas للكرات الصغيرة والخطوط فوق الخلفية */}
       <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none" />
 
       <div className="relative z-10 text-center px-4">
